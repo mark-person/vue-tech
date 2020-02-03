@@ -1,4 +1,4 @@
-# myvue
+# vue-tech001
 
 ## Project setup
 ```
