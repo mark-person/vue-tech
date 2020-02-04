@@ -78,5 +78,9 @@ com.alibaba.druid.support.profile.ProfileEntryKey(数量:1,228,812)
 * java和oracle会循环，mysql会报错
                         
 
+### 编程思维
+* 思维:java(增删改查) python(完全统计) DB(索引)
+
+
 
 
