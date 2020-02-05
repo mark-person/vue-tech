@@ -31,3 +31,7 @@ jstack -l PID > thread.txt
 # 删除数据后，执行下面语句才释放空间
 db.repairDatabase()
 ```
+
+### ngin的Host配置
+nginx配置proxy_set_header  Host  $host;
+配置错误和配置两个
