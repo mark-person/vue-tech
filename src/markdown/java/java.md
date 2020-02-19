@@ -20,6 +20,7 @@ try (FileOutputStream f = null;) {
 * 案例：没关闭httpclient连接，内存溢出java.lang.ref.Finalizer对象Retained Heap=1.79G
     > * 参考：https://www2014.aspxhtml.com/post-4748 
     > * 搜索: The class "java.lang.ref.Finalizer", loaded by "<system class loader>"
+* 最终目标: 业务代码里没有try...catch...的代码
 
 ### <img src="../../assets/18.png"/>递归方法必须防止死循环(树型数据结构)
 * 案例：菜单表的垃圾数据的id="" parentId=""造成死循环，
@@ -33,10 +34,16 @@ java.lang.String(2千万个对象)
 ### <img src="../../assets/18.png"/>SQL非拼装需求时不能使用Map
 * 需要显式使用column_name = ?, 否则可能在页面没有传值情况或攻击时，造成内存溢出
 
-### 造成内存溢出的一些案例
+### <img src="../../assets/18w.png"/>造成内存溢出的一些案例
 * 全部数据载入内存再统计(数据量少时没问题，数据量大了就卡顿，并造成内存溢出)
 * 大量数据没分页，或者分页写错了
 * 业务主表中有大字段
+
+### <img src="../../assets/18w.png"/>关于代码风格
+如何记忆?
+* 为什么注解后面一个空格，原因区分，在英文环境，为了一眼区分注解和代码
+* if后面为什么空格，很多编程语言if后面是没有(的，需要后面带空格
+
 
 
 

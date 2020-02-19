@@ -19,11 +19,19 @@ ps -mp 31915 -o THREAD,tid,time | sort -k2r
 printf "%x \n" 31968
 jstack -l 31915 | grep 7ce0 -A 30
 ```
+* 常见问题
+    > * 高cpu线程为socket, 并发太高
+    > * 常见问题大量mysql read0线程，优化慢SQL
 
 ### <img src="../../assets/18.png"/>打不开页面，卡住
 ```shell script
 # 打印线程信息
 jstack -l PID > thread.txt
+```
+
+### 打印实时内存
+```shell script
+jstat -gcutil  PID 2000
 ```
 
 ### mongodb
@@ -32,6 +40,6 @@ jstack -l PID > thread.txt
 db.repairDatabase()
 ```
 
-### ngin的Host配置
+### nginx的Host配置
 nginx配置proxy_set_header  Host  $host;
 配置错误和配置两个

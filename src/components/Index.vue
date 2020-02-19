@@ -10,7 +10,8 @@
     </div>
     <div style="text-align: center">
       <div style="display: flex;justify-content: center;">
-        <span>说明：</span> <img src="../assets/18.png"/><span>表示必须了解</span>
+        <span>说明：</span> <img src="../assets/18.png"/><span>表示必须了解(重要紧急)</span>
+        <img src="../assets/18w.png"/><span>重要非紧急</span>
       </div>
     </div>
   </div>

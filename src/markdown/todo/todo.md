@@ -1,104 +1,69 @@
 
-### <img src="../../assets/18.png"/>至少保证代码是在本地运行过的
-* 测试人员一般测试不出来，在特定条件下才运行的代码
-    > * 拼出来的sql都是错的
-    > * if语句忘了return，只打印信息
-    > * 代码没有启动
 
-### <img src="../../assets/18.png"/>接口稳定性
-* 防止接口增加字段而造成接口不可用
-
-
-### 问题：浏览器拦截了body为200多k的异步请求，直接请求可以
-* 解决：可能是nginx对64k处理不一样，加上去缓存代码
-
-### 问题：客户那边的360或chrome浏览器open跳到其他页("可能是#问题")
-* 解决：浏览器open处理不了复杂的页面，改简单 去掉RedseaPlatform/PtPortal.mc?method=worktoday#iframe&0&&
-
-### 连接池druid的问题(请求次数较多的时候造成内存溢出)
-```xml
-<!-- druid 页面监控器 -->
-<!-- 记录URI所有执行过的SQL， 非常消耗内存和性能！！ -->
-<init-param>
-    <param-name>profileEnable</param-name>
-    <param-value>true</param-value>
-</init-param>
-```
-* 测试问题重现：同一个url每次都执行不同sql, 造成druid的ProfileEntry*对象变多
-内存日志: com.alibaba.druid.support.profile.ProfileEntryStat(数量:1,228,807)
-com.alibaba.druid.support.profile.ProfileEntryKey(数量:1,228,812)
-* 解决：<param-value>true</param-value>改成<param-value>false</param-value>
-* druid另外存在的问题:druid内存记录所有重复的SQL(配置的合并开关已开)
-
-### 内存对象org.springframework.core.annotation.AnnotationAttributes数量=2,670,817
-* 解决：定时器服务器连接数据库失败引起服务不停的重启，造成大量AnnotationAttributes
-
-### 页面卡顿，并有很多请求
-* 解决：Ajax complete异步返回修改返回内容，document.write出ajax请求
-* 相似案例：一个页面并发70多个请求，造成后端socket异常
-
-### 内存里org.apache.xmlbeans.impl.store.Xobj$AttrXobj（4百多万）和org.apache.xmlbeans.impl.store.Xobj$ElementXobj（1百多万）
-* 解决：XSSFWorkbook导出中每个格子都setStyle后不会释放内存
-
-### 宕机，报大量的dubbo找不到类异常
-* 解决：dubbo设计问题，找不到类用Error(线程终止)可以防止宕机，而不是使用Exception
-
-### 本地服务启动卡住没报错
-* 解决：打印线程，查看代码运行到哪一步，然后修改源码，打印错误处，原因:jar包不完整
-
-### 在linux中，启动报卡住没报错
-* 解决: 打包代码回本地运行，报连接mongdb异常，原因：配置错误
-
-### 打不开页面，卡住
-* 解决：打印线程，连接数据库read0占满100个，找慢SQL或加连接参数
-
-### 在linux中，服务启动慢(启动要一小时)
-* 解决：看启动日志，dubbo耗时在读取计算机名时，修改hosts,注意ip4,ip6
-
-### 超时控制漏斗原则：尽量保持交易线上前端系统超时设置大于后端系统
-* nginx: proxy_read_timeout=90 连接成功后_等候后端服务器响应时间_其实已经进入后端的排队之中等候处理（也可以说是后端服务器处理请求的时间）
-* WebSphere线程超时时间600秒
-* 报错，业务员重新操作，造成多发了500万现金券
-
-### 定时器调用没有运行(代码没有启动)
-* 解决：缺少startCron方法
-
-### 浏览器报叹号警告
-* 客户拦截特殊字符
-* 请求body过大，去缓存解决
-
-### 新装系统登录失败, 每个请求头自动加上Cache
-* 解决：服务器加上自动加上缓存代打印线程码，找客户要求去掉
-
-### 部分乱码
-* 查看binlog有修改字符集的代码(代码或存储过程中)
-
-### 处理大数据时，sequence再循环，出现相同值
-* java maxInt, mysql maxInt, oracle sequence
-* java和oracle会循环，mysql会报错
-                        
-### 编程思维
-* 思维:java(增删改查) python(完全统计) DB(索引)
-
-
-### 日志太多
-石药宕机问题：一个请求打印日志过多，一个请求2百多条日志(估计是在递归里调用的另一个有事务的方法，产生很多无用的日志)
+# 打印日志过多
+现象：java新生代未满，年老代已满，卡住，没有内存溢出日志
+石药宕机问题：一个高频请求打印日志过多，一个请求2百多条日志(估计是在递归里调用的另一个有事务的方法，产生很多无用的日志)
 control.MobileInterfaceControlWithCommon_OutWork:394
 时间2020-02-07 00:00 - 8:30（一台机:6000个请求*200条日志*3行记录=360万行日志)
 占了差不多三分之一的日志
 高峰期：2020-02-07 07:33:16 - 08:12:23（一台机2300个请求*600行=138万行日志）
 解决方法：不要打印无用的日志
 
-### 工作流死循环
-
-
-### 未重启成功引起内存溢出 数据库连接失败引起内存溢出 
-表现:8百多万 LinkHashMap对象  1百多万annotaion对象 线程中没有red.sea....
-
-
-### 代码最初的样子
+# tocmat卡死,数据库事务锁没有sql
 ```
-explain SELECT kc.count_id,kc.staff_id,kc.staff_name,kc.time_num,kc.work_day,
+"http-bio-8701-exec-246" daemon prio=10 tid=0x00007fd624003800 nid=0x36dc runnable [0x00007fd610e9a000]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:152)
+	at java.net.SocketInputStream.read(SocketInputStream.java:122)
+	at com.mysql.jdbc.util.ReadAheadInputStream.fill(ReadAheadInputStream.java:100)
+	at com.mysql.jdbc.util.ReadAheadInputStream.readFromUnderlyingStreamIfNecessary(ReadAheadInputStream.java:143)
+	at com.mysql.jdbc.util.ReadAheadInputStream.read(ReadAheadInputStream.java:173)
+	- locked <0x00000007d31d1710> (a com.mysql.jdbc.util.ReadAheadInputStream)
+	at com.mysql.jdbc.MysqlIO.readFully(MysqlIO.java:2911)
+	at com.mysql.jdbc.MysqlIO.reuseAndReadPacket(MysqlIO.java:3337)
+	at com.mysql.jdbc.MysqlIO.reuseAndReadPacket(MysqlIO.java:3327)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3814)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2435)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2582)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2526)
+	- locked <0x00000007d31ca5b0> (a com.mysql.jdbc.JDBC4Connection)
+	at com.mysql.jdbc.ConnectionImpl.setAutoCommit(ConnectionImpl.java:4846)
+	- locked <0x00000007d31ca5b0> (a com.mysql.jdbc.JDBC4Connection)
+	at com.alibaba.druid.filter.FilterChainImpl.connection_setAutoCommit(FilterChainImpl.java:553)
+	at com.alibaba.druid.filter.FilterAdapter.connection_setAutoCommit(FilterAdapter.java:984)
+	at com.alibaba.druid.filter.FilterChainImpl.connection_setAutoCommit(FilterChainImpl.java:549)
+	at com.alibaba.druid.proxy.jdbc.ConnectionProxyImpl.setAutoCommit(ConnectionProxyImpl.java:430)
+	at com.alibaba.druid.pool.DruidPooledConnection.setAutoCommit(DruidPooledConnection.java:686)
+	at org.springframework.jdbc.datasource.DataSourceTransactionManager.doCleanupAfterCompletion(DataSourceTransactionManager.java:313)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.cleanupAfterCompletion(AbstractPlatformTransactionManager.java:1009)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.processCommit(AbstractPlatformTransactionManager.java:805)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.commit(AbstractPlatformTransactionManager.java:724)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.commitTransactionAfterReturning(TransactionAspectSupport.java:475)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:270)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:94)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:172)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:96)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:260)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:94)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:172)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:91)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:172)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:204)
+	at com.sun.proxy.$Proxy416.getAllHrRosterColNoPage(Unknown Source)
+	at red.sea.hr.custommodule.HrModuleTempletFactory.getListCol(HrModuleTempletFactory.java:56)
+	at red.sea.hr.customRoster.roster.controller.HrRosterController.getRosterListNew(HrRosterController.java:1169)
+	at sun.reflect.GeneratedMethodAccessor1246.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+```
+临时解决方案：加大缓存区，mysql连接后面加&tcpRcvBuf=1024000
+长期解决方案(需要分业务类型，长请求，短请求)：mysql连接配置socketTimeout
+
+
+# 考勤匹配
+```sql
+SELECT kc.count_id,kc.staff_id,kc.staff_name,kc.time_num,kc.work_day,
   kc.kq_status_total,Fn_SelectNameByCode(kc.kq_status_total,'kq_count.KQSTATUS') kq_status_name,
   kc.cd_time,kc.zt_time,kc.kg_total_min,kc.yq_total_min,kc.sj_total_min,kc.qj_total_min,kc.ps_ot_min,kc.xx_ot_min,kc.jr_ot_min,
   kq_status,kq_status2,kq_status3,
@@ -157,6 +122,8 @@ FROM kq_count kc LEFT JOIN kq_banci kb ON kc.bc_id = kb.bc_id
   LEFT JOIN pt_holiday ph ON kw.holiday_id = ph.holiday_id AND ph.date=kc.work_day
 WHERE kc.staff_id= '' AND kc.work_day= ''
 ```
+
+
 
 
 

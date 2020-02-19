@@ -1,16 +1,16 @@
 
-### 尽量让SQL简单，不带多余没用语句
+### <img src="../../assets/18.png"/>尽量让SQL简单，不带多余没用语句
 * mysql5.x 优化器比mysql8和oracle差的地方
 ```sql
-select * from pt_users where user_id = ? order by create_time 
+select * from pt_users where user_id = ? order by create_time -- 保利
 ```
 用了explain select *...会发现mysql5.x会多出Using filesort(mysql8和oracle不会)
 * 相似案例(参考《数据库设计规范（19-11-06）》)
     > * COUNT后面的子查询中的SELECT没有意义, 分页语句分两条写
     > * 用子查询，写法不规范, 关联了多余的表，或者用错关联字段
+* 相似页面案例，客户电脑open打不开复杂的页面(带有#并跳转)
 
-
-# 如何从数据库设计来解决数据库性能问题（展望未来）
+# <img src="../../assets/18w.png"/>如何从数据库设计来解决数据库性能问题
 * 不要过度设计，关注需求
 * 多备用一张王牌，关键时可以出（数据量大的时候）
 * 目标:
