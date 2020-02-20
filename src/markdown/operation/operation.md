@@ -34,6 +34,11 @@ jstack -l PID > thread.txt
 jstat -gcutil  PID 2000
 ```
 
+### 打PID,除了ps aux|grep java
+```
+jps
+```
+
 ### mongodb
 ```shell script
 # 删除数据后，执行下面语句才释放空间
