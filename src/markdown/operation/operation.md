@@ -32,6 +32,9 @@ jstack -l PID > thread.txt
 ### 打印实时内存
 ```shell script
 jstat -gcutil  PID 2000
+
+jmap -heap PID
+
 ```
 
 ### 打PID,除了ps aux|grep java
@@ -48,3 +51,4 @@ db.repairDatabase()
 ### nginx的Host配置
 nginx配置proxy_set_header  Host  $host;
 配置错误和配置两个
+
