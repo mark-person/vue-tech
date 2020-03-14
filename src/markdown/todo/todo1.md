@@ -59,7 +59,9 @@ red.sea.hr.custommodule.hrmodulepropertypagecol.data.HrModulePropertyPageCol 对
 # 代码只更新一半
 * sqlID, 页面没有加密， 后面已经解密
 
-
+# 菜单检测问题
+* 4分钟，变两小时
+* 跟vpn同一台机
 
 
 
