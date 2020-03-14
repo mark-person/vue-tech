@@ -63,6 +63,8 @@ red.sea.hr.custommodule.hrmodulepropertypagecol.data.HrModulePropertyPageCol 对
 * 4分钟，变两小时
 * 跟vpn同一台机
 
+# 一个高频请求日志过多
+循环里调用事务
 
 
 
