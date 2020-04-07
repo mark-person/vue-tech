@@ -67,7 +67,25 @@ red.sea.hr.custommodule.hrmodulepropertypagecol.data.HrModulePropertyPageCol 对
 循环里调用事务
 
 
-
+# 隆基泰和正式cpu高
+Thread 6934: (state = IN_JAVA)
+Error occurred during stack walking:
+不用转换tid
+```
+[root@localhost ~]# ps -mp 4849 -o THREAD,tid,time | sort -k2r
+USER     %CPU PRI SCNT WCHAN  USER SYSTEM   TID     TIME
+ehr       6.0  19    - futex_    -      -  6934 01:14:28
+ehr       4.6  19    - futex_    -      -  6852 00:57:32
+ehr      40.0   -    - -         -      -     - 08:15:42
+ehr       3.7  19    - futex_    -      -  6907 00:45:52
+ehr       3.7  19    - futex_    -      -  6886 00:46:38
+ehr       2.6  19    - futex_    -      -  6931 00:32:30
+ehr       2.6  19    - -         -      -  6937 00:32:19
+ehr       2.4  19    - futex_    -      -  6918 00:29:52
+ehr       2.3  19    - futex_    -      -  6889 00:28:30
+ehr       2.3  19    - futex_    -      -  6885 00:28:54
+ehr       2.3  19    - futex_    -      -  6850 00:28:33
+```
 
 
 
