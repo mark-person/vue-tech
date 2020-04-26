@@ -52,3 +52,13 @@ db.repairDatabase()
 nginx配置proxy_set_header  Host  $host;
 配置错误和配置两个
 
+### rewriteBatchedStatements=true 
+添加rewriteBatchedStatements=true这个参数后的执行速度比较：
+同个表插入一万条数据时间近似值：
+JDBC BATCH 1.1秒左右 > Mybatis BATCH 2.2秒左右 > 拼接SQL 4.5秒左右
+
+
+
+
+
+
