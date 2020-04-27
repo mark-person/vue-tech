@@ -16,7 +16,9 @@ WebURIStat uriStat = webAppStat.getURIStat(myUrl, false);
 # /druid跳转到登录页，用户和密码在web.xml里
 # 部分返回json的请求报错，改成反回xml没有错， 由于nginx的代理临时目录没有权限，请求post过大也是一样，查看nginx错误日志
 
-
+# mysql5.7
+花名册查询慢的问题，两个问题，1.一个小表没有索引，hr_staff_hire_salary.SALARY_ID(STAFF_ID关联外面) 2 set optimizer_switch='derived_merge=on'
+(考勤管理-日报初始化程序用存过 使用了derived_merge=off)
 
 
 

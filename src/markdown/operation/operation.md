@@ -31,7 +31,7 @@ jstack -l PID > thread.txt
 
 ### 打印实时内存
 ```shell script
-jstat -gcutil  PID 2000
+jstat -gcutil PID 2000
 
 jmap -heap PID
 
