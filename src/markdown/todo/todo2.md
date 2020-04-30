@@ -20,6 +20,9 @@ WebURIStat uriStat = webAppStat.getURIStat(myUrl, false);
 花名册查询慢的问题，两个问题，1.一个小表没有索引，hr_staff_hire_salary.SALARY_ID(STAFF_ID关联外面) 2 set optimizer_switch='derived_merge=on'
 (考勤管理-日报初始化程序用存过 使用了derived_merge=off)
 
+# 多个red.sea.controller.CoreRquestController.getListFull
+由sqlId:kq_rule_overtime_judge引起的/RedseaPlatform/getList/kq_rule_overtime_judge/CoreRequest.mc(16:14:02 - 17:59:27 超过60秒的有300563条)
+
 
 
 
